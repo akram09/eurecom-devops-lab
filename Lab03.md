@@ -198,9 +198,22 @@ Access the Flask app using the port-forward created by kubernetes.
     ```bash
     black app.py
     ```
+
     
 
 2. Automate Linting and Formatting
+   
+
+    - Setup a local git repository
+
+    ```bash
+    git init
+    ```
+
+    - Create .gitignore
+    ```bash
+    venv
+    ``
 
     - Install pre-commit hooks:
 
@@ -215,7 +228,7 @@ Access the Flask app using the port-forward created by kubernetes.
         rev: 23.1a1
         hooks:
           - id: black
-      - repo: https://gitlab.com/pycqa/flake8
+      - repo: [https://gitlab.com/pycqa/flake8](https://github.com/pycqa/flake8)
         rev: 6.0.0
         hooks:
           - id: flake8
@@ -225,8 +238,14 @@ Access the Flask app using the port-forward created by kubernetes.
     ```bash
     pre-commit install
     ```
+
+    - Create a github repository and push the local repository.
+  
+    - Make sure that pre-commit are running. Try to change in `app.py` to make the formatting showing error on pre-commit.
+  
+    - Take a screenshot of both a success push and an errored one.
     
-**Question 8: What happens when you commit code that doesn’t follow Black’s formatting rules?**
+**Question 8: What happens when you commit code that doesn’t follow formatting/linting rules?**
 
 ### Section 4: Automate Deployment with Jenkins 
 1. Run Jenkins in Docker
