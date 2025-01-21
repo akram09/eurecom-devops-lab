@@ -151,7 +151,6 @@ Ensure you have the following installed:
         targetPort: 8080
       type: ClusterIP
     ```
-
 **Question 4: What is the difference between a Deployment and a Service in Kubernetes?**
 
 2. Deploy on Kubernetes
@@ -174,7 +173,7 @@ Ensure you have the following installed:
     
     - Test the Application
 
-Access the Flask app using the proxy created by kubernetes.
+Access the Flask app using the port-forward created by kubernetes.
 
 **Question 6: What happens when you scale the deployment to 4 replicas?
 (Hint: Use kubectl scale deployment flask-app --replicas=4.)**
