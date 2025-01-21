@@ -10,6 +10,10 @@ By the end of this lab, you’ll:
 - **Apply linting and formatting with Flake8 and Black.**
 - **Automate deployment using Jenkins pipelines.**
 - **Monitor and troubleshoot Kubernetes deployments.**
+
+## Important ! 
+We will be using the same environment as the last lab, so please use the same machine in order to access the Kubernetes cluster you have created previously.
+
 ## Prerequisites
 Ensure you have the following installed:
 
@@ -90,192 +94,177 @@ Ensure you have the following installed:
 **Question 3: What does the docker run command do, and why is -p 5000:5000 necessary?**
 
 ### Section 2: Kubernetes Deployment 
-Create Deployment and Service
+1. Create Deployment and Service
 
-Write deployment.yaml:
+    - Write deployment.yaml:
 
-yaml
-Copy
-Edit
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: flask-app
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: flask-app
-  template:
+    ```yaml
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
-      labels:
-        app: flask-app
+      name: flask-app
     spec:
-      containers:
-      - name: flask-app
-        image: flask-app
-        ports:
-        - containerPort: 5000
-Write service.yaml:
+      replicas: 2
+      selector:
+        matchLabels:
+          app: flask-app
+      template:
+        metadata:
+          labels:
+            app: flask-app
+        spec:
+          containers:
+          - name: flask-app
+            image: flask-app
+            ports:
+            - containerPort: 5000
+    ```
+    
+    - Write service.yaml:
+    ```yaml
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: flask-app-service
+    spec:
+      selector:
+        app: flask-app
+      ports:
+      - protocol: TCP
+        port: 5000
+        targetPort: 5000
+      type: ClusterIP
+    ```
 
-yaml
-Copy
-Edit
-apiVersion: v1
-kind: Service
-metadata:
-  name: flask-app-service
-spec:
-  selector:
-    app: flask-app
-  ports:
-  - protocol: TCP
-    port: 5000
-    targetPort: 5000
-  type: LoadBalancer
-Question 4: What is the difference between a Deployment and a Service in Kubernetes?
+**Question 4: What is the difference between a Deployment and a Service in Kubernetes?**
 
-Deploy on Kubernetes
+2. Deploy on Kubernetes
 
-Apply the files:
+    - Apply the files:
 
-bash
-Copy
-Edit
-kubectl apply -f deployment.yaml
-kubectl apply -f service.yaml
-Verify deployments:
+    ```bash
+    kubectl apply -f deployment.yaml
+    kubectl apply -f service.yaml
+    ```
 
-bash
-Copy
-Edit
-kubectl get pods
-kubectl get services
-Question 5: What is the external IP of your service, and how do you access it?
+    - Verify deployments:
 
-Test the Application
+    ```bash
+    kubectl get pods
+    kubectl get services
+    ```
+    
+**Question 5: What is the external IP of your service, and how do you access it?**
+    
+    - Test the Application
 
-Access the Flask app using the service’s external IP.
+Access the Flask app using the proxy created by kubernetes.
 
-Question 6: What happens when you scale the deployment to 4 replicas?
-(Hint: Use kubectl scale deployment flask-app --replicas=4.)
+**Question 6: What happens when you scale the deployment to 4 replicas?
+(Hint: Use kubectl scale deployment flask-app --replicas=4.)**
 
-Section 3: Code Quality with Linting and Formatting (30 minutes)
-Set Up Flake8 and Black
+### Section 3: Code Quality with Linting and Formatting (30 minutes)
 
-Install tools:
+1. Set Up Flake8 and Black
 
-bash
-Copy
-Edit
-pip install flake8 black
-Run Flake8 for linting:
+    - Install tools:
 
-bash
-Copy
-Edit
-flake8 app.py
-Run Black for formatting:
+    ```bash
+    pip install flake8 black
+    ```
+    
+    - Run Flake8 for linting:
 
-bash
-Copy
-Edit
-black app.py
-Question 7: How does Black ensure consistent code formatting?
+    ```bash
+    flake8 app.py
+    ```
+    - Run Black for formatting:
 
-Automate Linting and Formatting
+    ```bash
+    black app.py
+    ```
+    
 
-Install pre-commit hooks:
+2. Automate Linting and Formatting
 
-bash
-Copy
-Edit
-pip install pre-commit
-Create .pre-commit-config.yaml:
+    - Install pre-commit hooks:
 
-yaml
-Copy
-Edit
-repos:
-  - repo: https://github.com/psf/black
-    rev: 23.1a1
-    hooks:
-      - id: black
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: 6.0.0
-    hooks:
-      - id: flake8
-Install hooks:
+    ```bash
+    pip install pre-commit
+    ```
+    - Create .pre-commit-config.yaml:
 
-bash
-Copy
-Edit
-pre-commit install
-Question 8: What happens when you commit code that doesn’t follow Black’s formatting rules?
+    ```yaml
+    repos:
+      - repo: https://github.com/psf/black
+        rev: 23.1a1
+        hooks:
+          - id: black
+      - repo: https://gitlab.com/pycqa/flake8
+        rev: 6.0.0
+        hooks:
+          - id: flake8
+    ```
+    - Install hooks:
 
-Section 4: Automate Deployment with Jenkins (45 minutes)
-Run Jenkins in Docker
+    ```bash
+    pre-commit install
+    ```
+    
+**Question 8: What happens when you commit code that doesn’t follow Black’s formatting rules?**
 
-Start Jenkins:
+### Section 4: Automate Deployment with Jenkins 
+1. Run Jenkins in Docker
 
-bash
-Copy
-Edit
-docker run -d -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts
-Access Jenkins at http://localhost:8080.
+    - Start Jenkins:
 
-Question 9: How do you retrieve the initial admin password for Jenkins?
+    ```bash
+    docker run -d -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts
+    ```
 
-Create a Jenkinsfile
+    - Access Jenkins at http://localhost:8080.
 
-Write a Jenkinsfile:
+**Question 9: How do you retrieve the initial admin password for Jenkins?**
 
-groovy
-Copy
-Edit
-pipeline {
-    agent any
-    stages {
-        stage('Lint') {
-            steps {
-                sh 'flake8 app.py'
+2. Create a Jenkinsfile
+
+    - Write a Jenkinsfile:
+
+    ```groovy
+    pipeline {
+        agent any
+        stages {
+            stage('Lint') {
+                steps {
+                    sh 'flake8 app.py'
+                }
             }
-        }
-        stage('Format') {
-            steps {
-                sh 'black --check app.py'
+            stage('Format') {
+                steps {
+                    sh 'black --check app.py'
+                }
             }
-        }
-        stage('Build') {
-            steps {
-                sh 'docker build -t flask-app .'
+            stage('Build') {
+                steps {
+                    sh 'docker build -t flask-app .'
+                }
             }
-        }
-        stage('Deploy') {
-            steps {
-                sh 'kubectl apply -f deployment.yaml'
-                sh 'kubectl apply -f service.yaml'
+            stage('Deploy') {
+                steps {
+                    sh 'kubectl apply -f deployment.yaml'
+                    sh 'kubectl apply -f service.yaml'
+                }
             }
         }
     }
-}
-Add the pipeline job in Jenkins.
+    ```
+    - Add the pipeline job in Jenkins.
 
-Question 10: What stages are included in the pipeline, and what does each one do?
+**Question 10: What stages are included in the pipeline, and what does each one do?**
 
-Trigger the Pipeline
+3. Trigger the Pipeline
 
-Push the code to a Git repository and trigger the pipeline.
+    - Push the code to a Git repository and trigger the pipeline.
 
-Question 11: How do you check the logs for each pipeline stage?
+**Question 11: How do you check the logs for each pipeline stage?**
 
-Lab Report Guidelines
-Your report should include:
-
-Summary: Summarize what you did in each section.
-Answers to Questions: Provide answers to all the questions.
-Screenshots/Logs: Include evidence of your deployment and testing.
-Final Questions
-Why is CI/CD important for modern software development?
-What role do linting and formatting tools play in maintaining code quality?
-How does Kubernetes simplify application scaling?
