@@ -105,7 +105,7 @@ Ensure you have the following installed:
 
     - Retag the created image to your actual dockerhub repository, then push to dockerhub.
     ```bash 
-    docker tag flask-app <dockerhub-username>/<repo-name>:0.0.1
+    docker tag flask-app:latest <dockerhub-username>/<repo-name>:0.0.1
     docker push <dockerhub-username>/<repo-name>:0.0.1
     ```
 
