@@ -131,9 +131,9 @@ Ensure you have the following installed:
         spec:
           containers:
           - name: flask-app
-            image: flask-app
+            image: <dockerhub-username>/<repo-name>:0.0.1
             ports:
-            - containerPort: 5000
+            - containerPort: 8080
     ```
     
     - Write service.yaml:
@@ -147,8 +147,8 @@ Ensure you have the following installed:
         app: flask-app
       ports:
       - protocol: TCP
-        port: 5000
-        targetPort: 5000
+        port: 8080
+        targetPort: 8080
       type: ClusterIP
     ```
 
