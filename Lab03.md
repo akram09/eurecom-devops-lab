@@ -88,10 +88,26 @@ Ensure you have the following installed:
 
     ```bash
     docker build -t flask-app .
-    docker run -p 5000:5000 flask-app
+    docker run -p 8080:8080 flask-app
     ```
 
-**Question 3: What does the docker run command do, and why is -p 5000:5000 necessary?**
+**Question 3: What does the docker run command do, and why is -p 8080:8080 necessary?**
+
+4. Pushing created image
+   
+    - Create a dockerhub account at https://hub.docker.com. The dockerhub registry allows for unlimited public repositories and one single private repository. 
+
+    - Once the account created, run login on your machine. This will open a browser and sync with docker in your machine (we will clean everything later)
+    
+    ```bash
+    docker login
+    ```
+
+    - Retag the created image to your actual dockerhub repository, then push to dockerhub.
+    ```bash 
+    docker tag flask-app <dockerhub-username>/<repo-name>:0.0.1
+    docker push <dockerhub-username>/<repo-name>:0.0.1
+    ```
 
 ### Section 2: Kubernetes Deployment 
 1. Create Deployment and Service
