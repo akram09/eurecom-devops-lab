@@ -1,92 +1,95 @@
+**NETSOFT                                                    
+Adlen Ksentini**
+
 ## Introduction
 This lab teaches you how to deploy a simple Flask web application in a Kubernetes cluster while incorporating linting, code formatting, and CI/CD automation using Jenkins. You’ll containerize the Flask application using Docker, deploy it on Kubernetes, and automate these processes with a Jenkins pipeline.
 
 By the end of this lab, you’ll:
 
-Deploy and containerize a Flask app.
-Apply linting and formatting with Flake8 and Black.
-Automate deployment using Jenkins pipelines.
-Monitor and troubleshoot Kubernetes deployments.
-Prerequisites
+- **Deploy and containerize a Flask app.**
+- **Apply linting and formatting with Flake8 and Black.**
+- **Automate deployment using Jenkins pipelines.**
+- **Monitor and troubleshoot Kubernetes deployments.**
+## Prerequisites
 Ensure you have the following installed:
 
-Docker, Kubernetes, kubectl, Minikube/KIND, Jenkins, Git, and Python 3.8+.
-Lab Steps
-Section 1: Setting Up the Flask Application (30 minutes)
-Create a Flask Application
+**Docker**, **Kubernetes**, **kubectl**, **Minikube/KIND**, **Jenkins**, **Git**, and **Python 3.8+**.
 
-Create a directory and Flask app:
+## Lab Steps
+### Section 1: Setting Up the Flask Application 
+1. Create a Flask Application
 
-bash
-Copy
-Edit
-mkdir flask-app
-cd flask-app
-Write the app.py file:
+    - Create a directory and Flask app:
 
-python
-Copy
-Edit
-from flask import Flask
+    ```bash
+    mkdir flask-app
+    cd flask-app
+    ```
 
-app = Flask(__name__)
+    - Write the app.py file:
 
-@app.route("/")
-def home():
-    return "Hello, Kubernetes!"
+    ```python
+    from flask import Flask
+    
+    app = Flask(__name__)
+    
+    @app.route("/")
+    def home():
+        return "Hello, Kubernetes!"
+    
+    if __name__ == "__main__":
+        app.run(host="0.0.0.0", port=5000)
+    ```
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
-Create a requirements.txt file:
+    - Create a requirements.txt file:
+    ```text
+    Flask==2.3.2
+    ```
+    
+**Question 1: What is the purpose of requirements.txt?**
 
-text
-Copy
-Edit
-Flask==2.3.2
-Question 1: What is the purpose of requirements.txt?
+2. Test the Application Locally
 
-Test the Application Locally
+    - Install dependencies and run Flask:
 
-Install dependencies and run Flask:
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    python app.py
+    ```
+    
+    - Access the app at http://127.0.0.1:5000.
 
-bash
-Copy
-Edit
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-python app.py
-Access the app at http://127.0.0.1:5000.
+**Question 2: What message do you see when accessing the app in your browser?**
 
-Question 2: What message do you see when accessing the app in your browser?
+3. Containerize the Application
 
-Containerize the Application
+    - Create a Dockerfile:
 
-Create a Dockerfile:
+    ```Dockerfile
+    FROM python:3.8-slim
 
-Dockerfile
-Copy
-Edit
-FROM python:3.8-slim
+    WORKDIR /app
 
-WORKDIR /app
+    COPY requirements.txt .
+    RUN pip install -r requirements.txt
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+    COPY . .
 
-COPY . .
+    CMD ["python", "app.py"]
+    ```
 
-CMD ["python", "app.py"]
-Build and test the Docker image:
+    - Build and test the Docker image:
 
-bash
-Copy
-Edit
-docker build -t flask-app .
-docker run -p 5000:5000 flask-app
-Question 3: What does the docker run command do, and why is -p 5000:5000 necessary?
+    ```bash
+    docker build -t flask-app .
+    docker run -p 5000:5000 flask-app
+    ```
 
-Section 2: Kubernetes Deployment (45 minutes)
+**Question 3: What does the docker run command do, and why is -p 5000:5000 necessary?**
+
+### Section 2: Kubernetes Deployment 
 Create Deployment and Service
 
 Write deployment.yaml:
