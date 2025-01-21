@@ -42,12 +42,12 @@ Ensure you have the following installed:
         return "Hello, Kubernetes!"
     
     if __name__ == "__main__":
-        app.run(host="0.0.0.0", port=5000)
+        app.run(host="0.0.0.0", port=8080)
     ```
 
     - Create a requirements.txt file:
     ```text
-    Flask==2.3.2
+    Flask==3.1.0
     ```
     
 **Question 1: What is the purpose of requirements.txt?**
@@ -57,13 +57,13 @@ Ensure you have the following installed:
     - Install dependencies and run Flask:
 
     ```bash
-    python3 -m venv venv
+    python3 -m venv venv # Or use virtualenv  
     source venv/bin/activate
     pip install -r requirements.txt
     python app.py
     ```
     
-    - Access the app at http://127.0.0.1:5000.
+    - Access the app at http://127.0.0.1:8080.
 
 **Question 2: What message do you see when accessing the app in your browser?**
 
