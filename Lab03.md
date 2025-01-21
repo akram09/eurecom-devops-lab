@@ -228,7 +228,7 @@ Access the Flask app using the port-forward created by kubernetes.
         rev: 23.1a1
         hooks:
           - id: black
-      - repo: [https://gitlab.com/pycqa/flake8](https://github.com/pycqa/flake8)
+      - repo: https://github.com/pycqa/flake8
         rev: 6.0.0
         hooks:
           - id: flake8
@@ -280,13 +280,8 @@ Access the Flask app using the port-forward created by kubernetes.
             }
             stage('Build') {
                 steps {
-                    sh 'docker build -t flask-app .'
-                }
-            }
-            stage('Deploy') {
-                steps {
-                    sh 'kubectl apply -f deployment.yaml'
-                    sh 'kubectl apply -f service.yaml'
+                    sh 'docker build -t <dockerhub-username>/<repo-name>:0.0.1 .'
+                    sh 'docker push <dockerhub-username>/<repo-name>:0.0.1'
                 }
             }
         }
