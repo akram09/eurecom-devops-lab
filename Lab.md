@@ -370,7 +370,7 @@ Access the Flask app using the port-forward created by kubernetes.
             }
             stage('Build') {
                 steps {
-                    sh 'docker build -t <dockerhub-username>/<repo-name>:0.0.1 .'
+                    sh 'docker build --network host -t <dockerhub-username>/<repo-name>:0.0.1 .'
                     sh 'docker push <dockerhub-username>/<repo-name>:0.0.1'
                 }
             }
