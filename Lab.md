@@ -243,7 +243,7 @@ Access the Flask app using the port-forward created by kubernetes.
   
     - Make sure that pre-commit are running. Try to change in `app.py` to make the formatting showing error on pre-commit.
   
-    - Take a screenshot of both a success push and an errored one.
+**Question 7: Take a screenshot of both a success push and an errored one.**
     
 **Question 8: What happens when you commit code that doesn’t follow formatting/linting rules?**
 
@@ -390,7 +390,7 @@ Access the Flask app using the port-forward created by kubernetes.
          '''
      }
    ```
-   - For docker configureation, we need to give the jenkins user permission to run docker
+   - For docker configureation, we need to give the jenkins user permission to run docker **If you have installed jenkins on your folder then just skip this part**
    ```bash
    sudo usermod -aG docker jenkins
    sudo systemctl restart jenkins
@@ -421,7 +421,6 @@ Access the Flask app using the port-forward created by kubernetes.
 
 4. Setup of Kubernetes Deployment Step
    - Now add a final step to deploy the built image to Kubernetes. **Please add the steps you have followed in the report**
-   **PS:** You can test if the jenkins user can run kubectl commands by switching to that user on your machine
      ```bash
      sudo su - jenkins
      ```
