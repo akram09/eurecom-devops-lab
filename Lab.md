@@ -288,9 +288,11 @@ Access the Flask app using the port-forward created by kubernetes.
    ```
     - Create a Jenkins dockerfile
    ```bash
-   FROM jenkins/jenkins:2.479.3-jdk17
+    FROM jenkins/jenkins:2.479.3-jdk17
     USER root
     RUN apt-get update && apt-get install -y lsb-release
+    RUN apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev -y 
+    RUN apt install python3 python3-venv -y
     RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc \
       https://download.docker.com/linux/debian/gpg
     RUN echo "deb [arch=$(dpkg --print-architecture) \
