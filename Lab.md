@@ -17,7 +17,7 @@ We will be using the same environment as the last lab, so please use the same ma
 ## Prerequisites
 Ensure you have the following installed:
 
-**Docker**, **Kubernetes**, **kubectl**, **Minikube/KIND**, **Jenkins**, **Git**, and **Python 3.8+**.
+**Docker**, **Kubernetes**, **kubectl**, **Minikube/KIND**, **Git**, and **Python 3.8+**.
 
 ## Lab Steps
 ### Section 1: Setting Up the Flask Application 
