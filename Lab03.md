@@ -239,7 +239,7 @@ Access the Flask app using the port-forward created by kubernetes.
     pre-commit install
     ```
 
-    - Create a github repository and push the local repository.
+    - **Create a github repository and push the local repository.**
   
     - Make sure that pre-commit are running. Try to change in `app.py` to make the formatting showing error on pre-commit.
   
@@ -248,12 +248,23 @@ Access the Flask app using the port-forward created by kubernetes.
 **Question 8: What happens when you commit code that doesn’t follow formatting/linting rules?**
 
 ### Section 4: Automate Deployment with Jenkins 
-1. Run Jenkins in Docker
+1. Install Jenkins
 
-    - Start Jenkins:
+    - Install using package manager:
 
     ```bash
-    docker run -d -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts
+    sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+      https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+    echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
+      https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+      /etc/apt/sources.list.d/jenkins.list > /dev/null
+    sudo apt-get update
+    sudo apt-get install jenkins
+    ```
+    
+    - Start Jenkins
+    ```bash
+    systemctl start jenkins
     ```
 
     - Access Jenkins at http://localhost:8080.
@@ -265,6 +276,30 @@ Access the Flask app using the port-forward created by kubernetes.
     - Write a Jenkinsfile:
 
     ```groovy
+    pipeline {
+        agent any 
+        stages {
+            stage('build') {
+                steps {
+                    sh 'python3 --version'
+                }
+            }
+        }
+    }
+    ```
+3. Configure Jenkins to checkout github repository
+    - Go To Jenkins dashboard and create a new item, Select a Pipeline and choose a name for the pipeline.
+    - In general page select the github project checkbox and add the github repository link (Follow this structure https://github.com/<usernam>/<reponame>)
+    - Go to Pipeline Section, in the definition item select Pipeline from SCM, and select GIt as the SCM. Finally set the name of the git branch you are using. 
+    - You can try running the build by going back to the pipeline overview and click on Run Now.
+
+**Question 10: What stages are included in the pipeline, and what does each one do?**
+
+4. Setup of CI CD pipeline
+
+   - Update your Jenkinsfile with the following content
+  
+   ```groovy
     pipeline {
         agent any
         stages {
@@ -287,13 +322,6 @@ Access the Flask app using the port-forward created by kubernetes.
         }
     }
     ```
-    - Add the pipeline job in Jenkins.
-
-**Question 10: What stages are included in the pipeline, and what does each one do?**
-
-3. Trigger the Pipeline
-
-    - Push the code to a Git repository and trigger the pipeline.
-
-**Question 11: How do you check the logs for each pipeline stage?**
+   - Trigger the pipeline.
+   - Now add a final step to deploy the built image to Kubernetes. **Please add the steps you have followed in the report**
 
