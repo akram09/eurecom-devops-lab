@@ -322,6 +322,48 @@ Access the Flask app using the port-forward created by kubernetes.
         }
     }
     ```
-   - Trigger the pipeline.
+   - Trigger the pipeline. This pipeline won't execute well, since we need to make some adjustments on the pipeline and the machine we are executing the pipeline into.
+   - First, to fix the issue with 'Lint' and 'Format' we can either install the flake8 and black dependencies on our system. Or install them inside the pipeline as follows:
+   ```bash
+   steps {
+         sh '''
+         #!/bin/bash
+         python3 -m venv venv
+         . ./venv/bin/activate
+         pip install flake8
+         flake8 app.py
+         '''
+     }
+   ```
+   - For docker configureation, we need to give the jenkins user permission to run docker
+   ```bash
+   sudo usermod -aG docker jenkins
+   sudo systemctl restart jenkins
+   ```
+
+
+   - We would also need to give `docker push` our credentials to login. For that we will create a Jenkins credentials and use it from the Jenkfinsfile.
+   - Go To Jenkins Dashboard, in main page go to **Manage Jenkins** -> **Credentials** -> **System** -> **Global credentials (unrestricted)** -> **Add Credentials**
+   - Here you have two options, either you specify your actual dockerhub username and password, or you generate a Personal Access Token from dockerhub and use it as the password.
+   - Once the credential configured, update the Jenkinsfile accordingly:
+   ```bash
+   pipeline {
+     agent any
+     environment {
+         DOCKER_CREDENTIALS = credentials('dockerhub-credentials') // Use the ID of your credentials
+     }
+   ```
+
+   ```bash
+   stage('Build') {
+      steps {
+         sh 'echo $DOCKER_CREDENTIALS_PSW | docker login -u $DOCKER_CREDENTIALS_USR --password-stdin'
+      }
+   }
+   ```
+
+   - Run the Pipeline.
+
+4. Setup of Kubernetes Deployment Step
    - Now add a final step to deploy the built image to Kubernetes. **Please add the steps you have followed in the report**
 
