@@ -366,4 +366,10 @@ Access the Flask app using the port-forward created by kubernetes.
 
 4. Setup of Kubernetes Deployment Step
    - Now add a final step to deploy the built image to Kubernetes. **Please add the steps you have followed in the report**
+   **PS:** You can test if the jenkins user can run kubectl commands by switching to that user on your machine
+     ```bash
+     sudo su - jenkins
+     ```
+   Make sure that kubeconfig is configured so that the jenkins user can run kubectl commands
+
 
